@@ -1,0 +1,75 @@
+<head>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+
+</style>
+
+<script src='d3.min.js'></script>
+</head>
+
+<body>
+<div id='scatterplotgraph'></div>
+
+<script>
+
+var margin = {top: 20, right: 80, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scaleLinear().range([0, width]);
+
+var y = d3.scaleLinear().range([height, 0]);
+
+var svg = d3.select("#scatterplotgraph").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// Data-dependent bits
+d3.json('scatterplotdata.json', function(error, data) {
+	if (error) throw error;
+
+	x.domain(d3.extent(data, function(d) { return d.Seconds; }));
+	y.domain(d3.extent(data, function(d) { return d.Place; }));
+
+	svg.append('g')
+      .attr("transform", "translate(0," + (height + 10) + ")")
+      .call(d3.axisBottom(x));
+
+  svg.append('g')
+      .attr('transform', 'translate(-10,0)')
+      .call(d3.axisLeft(y));
+
+  svg.selectAll('dot')
+  	.data(data)
+  	.enter().append('circle')
+    	.attr('r', 4)
+    	.attr('cx', function(d) {return x(d.Seconds)})
+    	.attr('cy', function(d) {return y(d.Place)});
+
+  svg.selectAll('names')
+    .data(data)
+    .enter().append('text')
+      .attr('x', function(d) {return x(d.Seconds)+10})
+      .attr('y', function(d) {return y(d.Place)+3})
+      .text(function(d) {return d.Name});
+
+});
+</script>
+</body>
