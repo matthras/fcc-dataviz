@@ -87,6 +87,15 @@ d3.json('scatterplotdata.json', function(error, data) {
       .attr('y', function(d) {return y(d.Place)+3})
       .text(function(d) {return d.Name});
 
+  svg.selectAll('details')
+    .data(data)
+    .enter().append('text')
+      .attr('x', 10)
+      .attr('y', 10)
+      .attr('class', function(d) { return 'details'+d.Place})
+      .attr('style', 'display:none')
+      .text(function(d) {return d.Doping});
+
 });
 </script>
 </body>
