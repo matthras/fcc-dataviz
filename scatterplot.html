@@ -77,7 +77,8 @@ d3.json('scatterplotdata.json', function(error, data) {
   	.enter().append('circle')
     	.attr('r', 4)
     	.attr('cx', function(d) {return x(d.Seconds)})
-    	.attr('cy', function(d) {return y(d.Place)});
+    	.attr('cy', function(d) {return y(d.Place)})
+      .attr('fill', function(d) { if(d.Doping==""){ return 'black' } else { return 'red'} });
 
   svg.selectAll('names')
     .data(data)
