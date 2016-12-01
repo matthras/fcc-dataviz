@@ -20,9 +20,11 @@
 </head>
 
 <body>
-<div id='bargraph'></div>
+<div class='container'>
 
+	<div id='bargraph'></div>
 
+</div>
 
 <script>
 
@@ -49,8 +51,7 @@
 	d3.json('barchartdata.json', function(error, data) {
 		if (error) throw error;
 		console.log(data);
-		console.log(timeParse(data.data[0][0]));
-		x.domain([d3.timeYears(timeParse(data.data[0][0])), timeParse(data.data[data.data.length-1][0])]);
+		x.domain([timeParse(data.data[0][0]), timeParse(data.data[data.data.length-1][0])]);
 		y.domain(d3.extent(data.data.map(function(d) {return d[1] } )));
 
 		svg.append('g')
@@ -62,6 +63,15 @@
 			.call(d3.axisLeft(y));
 
 		var bar = svg.selectAll('.bar')
+			.data(data.data)
+			.enter().append('g')
+				.attr('class', 'bar')
+				.attr('transform', function(d) { return 'translate(' + x(timeParse(d[0])) + ',' + y(d[1]) + ')'});
+// { console.log(timeParse(d[0])) })
+			bar.append('rect')
+				.attr('x', 1)
+				.attr('width', 2)
+				.attr('height', function(d) { return height - y(d[1])})
 
 
 	})
